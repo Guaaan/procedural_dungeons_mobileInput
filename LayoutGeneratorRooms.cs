@@ -40,7 +40,7 @@ public class LayoutGeneratorRooms : MonoBehaviour
         int roomLength = random.Next(roomLengthMin, roomLengthMax);
         int availableLengthY = length / 2 - roomLength;
         int randomY = random.Next(0, availableLengthY);
-        int roomY = randomY + length / 4;
+        int roomY = randomY + width / 4;
 
         return new RectInt(roomX, roomY, roomWidth, roomLength);
     }
@@ -51,12 +51,14 @@ public class LayoutGeneratorRooms : MonoBehaviour
 
         //TextureArrayContainer del layout
         Texture2D layoutTexture = (Texture2D)renderer.sharedMaterial.mainTexture;
+
         //tamaño del layout
         layoutTexture.Reinitialize(width, length);
         levelLayoutDisplay.transform.localScale = new Vector3(width, length, 1);
         layoutTexture.FillWithColor(Color.black); //hacer el fondonegro
         layoutTexture.DrawRectangle(roomCandidateRect, Color.cyan); // dibuja el cuarto
-        openDoorways.ForEach(hallway => layoutTexture.SetPixel(hallway.StartPositionAbsolute.x, hallway.StartPositionAbsolute.y, Color.red));
+
+        openDoorways.ForEach(hallway => layoutTexture.SetPixel(hallway.StartPositionAbsolute.x, hallway.StartPositionAbsolute.y, hallway.StartDirection.GetColor()));
         //guarda la imagen del layout como sprite
         layoutTexture.SaveAsset();
     }
