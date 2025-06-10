@@ -13,6 +13,7 @@ public class LayoutGeneratorRooms : MonoBehaviour
     [SerializeField] int roomLengthMax = 5;
 
     [SerializeField] GameObject levelLayoutDisplay;
+    [SerializeField] List<Hallway> openDoorways;
 
     System.Random random;
 
@@ -20,8 +21,13 @@ public class LayoutGeneratorRooms : MonoBehaviour
     [ContextMenu("Generate Level Layout")]
     public void GenerateLevel() {
         random = new System.Random();
+        openDoorways = new List<Hallway>();
         RectInt roomRect = GetStartRoomRect();
         Debug.Log(roomRect); 
+        Room room = new Room(roomRect);
+        List<Hallway> hallways = room.CalculateAllPossibleDoorways(room.Area.width, room.Area.height, 1);
+        hallways.ForEach(h => h.StartRoom = room);
+        hallways.ForEach(h=> openDoorways.Add(h));
         DrawLayout(roomRect);
     }
 
@@ -47,11 +53,10 @@ public class LayoutGeneratorRooms : MonoBehaviour
         Texture2D layoutTexture = (Texture2D)renderer.sharedMaterial.mainTexture;
         //tamaño del layout
         layoutTexture.Reinitialize(width, length);
-
         levelLayoutDisplay.transform.localScale = new Vector3(width, length, 1);
-
         layoutTexture.FillWithColor(Color.black); //hacer el fondonegro
         layoutTexture.DrawRectangle(roomCandidateRect, Color.cyan); // dibuja el cuarto
+        openDoorways.ForEach(hallway => layoutTexture.SetPixel(hallway.StartPositionAbsolute.x, hallway.StartPositionAbsolute.y, Color.red));
         //guarda la imagen del layout como sprite
         layoutTexture.SaveAsset();
     }

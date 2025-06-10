@@ -11,11 +11,14 @@ public class Room
     {
         this.area = area;
     }
-    public List<Hallway> CalculateAllPossibleHallways(int width, int length, int minDistanceFromEdge)
+    public List<Hallway> CalculateAllPossibleDoorways(int width, int length, int minDistanceFromEdge)
     {
-        List<CalculateAllPossibleHallways> hallwayCandidates = new List<Hallway>();
+        List<Hallway> hallwayCandidates = new List<Hallway>();
+
         hallwayCandidates.Add(new Hallway(new Vector2Int(0, 0)));
         hallwayCandidates.Add(new Hallway(new Vector2Int(width, length)));
+
         return hallwayCandidates;
     }
+
 }
